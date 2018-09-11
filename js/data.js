@@ -4,6 +4,14 @@
 
   var QUANTITY_GOODS = 26;
 
+  var RATING_CLASSES = [
+    'stars__rating--one',
+    'stars__rating--two',
+    'stars__rating--three',
+    'stars__rating--four',
+    'stars__rating--five'
+  ];
+
   var candyOptions = {
     NAME: [
       'Чесночные сливки',
@@ -129,6 +137,7 @@
   };
 
 
+  var shufflePhotos = window.utils.shuffleElements(candyOptions.PHOTO_PICTURE);
   var catalog = document.querySelector(".catalog");
   var catalogCards = catalog.querySelector(".catalog__cards");
   var catalogLoad = catalog.querySelector(".catalog__load");
@@ -140,8 +149,8 @@
    * @param {number} index
    * @return {string}
    */
-  var getPhotoLink = function (index) {
-    return candyOptions.PHOTO_FOLDER + candyOptions.PHOTO_PICTURE[index] + candyOptions.PHOTO_EXTENSION;
+  var getPhotoLink = function (photoLinks, index) {
+    return candyOptions.PHOTO_FOLDER + photoLinks[index] + candyOptions.PHOTO_EXTENSION;
   };
 
   /**
@@ -188,7 +197,7 @@
   var getData = function (index) {
     return {
       name: candyOptions.NAME[index],
-      picture: getPhotoLink(index),
+      picture: getPhotoLink(shufflePhotos, index),
       amount: window.utils.getRandomInRange(candyOptions.amount.MIN, candyOptions.amount.MAX),
       price: window.utils.getRandomInRange(candyOptions.price.MIN, candyOptions.price.MAX),
       weight: window.utils.getRandomInRange(candyOptions.weight.MIN, candyOptions.weight.MAX),
@@ -202,6 +211,45 @@
         contents: getNutritionContent(candyOptions.NUTRITION_CONTENT)
       }
     }
+  };
+
+  catalogCards.classList.remove('catalog__cards--load');
+  catalogLoad.classList.add('visually-hidden');
+
+  /**
+   * Отрисовка карточки товара
+   * @param {Card} element
+   * @return {Node}
+   */
+  var renderCard = function (element) {
+    var cardElement = cardTemplate.cloneNode(true);
+
+    cardElement.classList.remove('card--in-stock');
+
+    if (element.amount === 0) {
+      cardElement.classList.add('card--soon');
+    } else if (element.amount >= 1 && element.amount <= 5) {
+      cardElement.classList.add('card--little');
+    } else if (element.amount > 5) {
+      cardElement.classList.add('card--in-stock');
+    }
+
+    cardElement.querySelector('.card__title').textContent = element.name;
+    cardElement.querySelector('.card__img').src = element.picture;
+    cardElement.querySelector('.card__img').alt = element.name;
+
+    cardElement.querySelector('.card__price').childNodes[0].textContent = element.price + ' ';
+    cardElement.querySelector('.card__weight').textContent = '/ ' + element.weight + 'Г';
+
+    cardElement.querySelector('.stars__rating').classList.remove('stars__rating--five');
+    cardElement.querySelector('.stars__rating').classList.add(RATING_CLASSES[element.rating.value - 1]);
+    cardElement.querySelector('.star__count').textContent = '(' + element.rating.number + ')';
+
+    cardElement.querySelector('.card__characteristic').textContent = element.nutritionFacts.sugar ?
+      'Содержит сахар' : 'Без сахара';
+    cardElement.querySelector('.card__composition-list').textContent = element.nutritionFacts.contents;
+
+    return cardElement;
   };
 
 
