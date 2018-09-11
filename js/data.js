@@ -2,6 +2,8 @@
 
 (function () {
 
+  var QUANTITY_GOODS = 26;
+
   var candyOptions = {
     NAME: [
       'Чесночные сливки',
@@ -115,10 +117,10 @@
       MAX: 900
     },
 
-    nutritionSugar: {
-      FALSE: 0,
-      TRUE: 1
-    },
+    nutritionSugar: [
+      true,
+      false
+    ],
 
     nutririonEnergy: {
       MIN: 70,
@@ -127,11 +129,10 @@
   };
 
 
-  var QUANTITY_GOODS = 26;
-
   var catalog = document.querySelector(".catalog");
   var catalogCards = catalog.querySelector(".catalog__cards");
-  var card = document.querySelector("template").content.querySelector(".card");
+  var catalogLoad = catalog.querySelector(".catalog__load");
+  var cardTemplate = document.querySelector("template").content.querySelector(".card");
 
 
   /**
@@ -196,7 +197,7 @@
         number: window.utils.getRandomInRange(candyOptions.ratingNumber.MIN, candyOptions.ratingNumber.MAX),
       },
       nutritionFacts: {
-        sugar: window.utils.getRandomInRange(candyOptions.nutritionSugar.FALSE, candyOptions.nutritionSugar.TRUE),
+        sugar: window.utils.getRandomElement(candyOptions.nutritionSugar),
         energy: window.utils.getRandomInRange(candyOptions.nutririonEnergy.MIN, candyOptions.nutririonEnergy.MAX),
         contents: getNutritionContent(candyOptions.NUTRITION_CONTENT)
       }
