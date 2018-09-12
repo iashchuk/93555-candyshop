@@ -2,7 +2,10 @@
 
 (function () {
 
-  var QUANTITY_GOODS = 26;
+  var QUANTITY_CARDS = 26;
+  var QUANTITY_ORDERS = 3;
+  var CATALOG_CARD = 1;
+  var GOODS_CARD = 0;
 
   var RATING_CLASSES = [
     'stars__rating--one',
@@ -136,13 +139,14 @@
     }
   };
 
-
   var shufflePhotos = window.utils.shuffleElements(candyOptions.PHOTO_PICTURE);
   var catalog = document.querySelector(".catalog");
   var catalogCards = catalog.querySelector(".catalog__cards");
   var catalogLoad = catalog.querySelector(".catalog__load");
-  var cardTemplate = document.querySelector("template").content.querySelector(".card");
-
+  var goodsCards = document.querySelector(".goods__cards");
+  var goodsCardEmpty = document.querySelector('.goods__card-empty');
+  var cardTemplate = document.querySelector("#card").content.querySelector(".card");
+  var cardOrderTemplate = document.querySelector("#card-order").content.querySelector(".card-order");
 
   /**
    * Функция получения ссылки
@@ -187,7 +191,6 @@
    * @property {Facts}
    */
 
-
   /**
    * Функция генерации данных для карточки товара
    * @param {number} index
@@ -213,11 +216,21 @@
     }
   };
 
-  catalogCards.classList.remove('catalog__cards--load');
-  catalogLoad.classList.add('visually-hidden');
+  /**
+   * Функция получения класса количества наличия товара
+   * @param {number} amount
+   * @return {string}
+   */
+
+  var getAmountClass = function (amount) {
+    if (amount === 0) {
+      return 'card--soon';
+    }
+    return amount > 5 ? 'card--in-stock' : 'card--little';
+  }
 
   /**
-   * Отрисовка карточки товара
+   * Отрисовка карточки каталога
    * @param {Card} element
    * @return {Node}
    */
@@ -225,32 +238,37 @@
     var cardElement = cardTemplate.cloneNode(true);
 
     cardElement.classList.remove('card--in-stock');
-
-    if (element.amount === 0) {
-      cardElement.classList.add('card--soon');
-    } else if (element.amount >= 1 && element.amount <= 5) {
-      cardElement.classList.add('card--little');
-    } else if (element.amount > 5) {
-      cardElement.classList.add('card--in-stock');
-    }
-
+    cardElement.querySelector('.stars__rating').classList.remove('stars__rating--five');
+    cardElement.classList.add(getAmountClass(element.amount));
     cardElement.querySelector('.card__title').textContent = element.name;
     cardElement.querySelector('.card__img').src = element.picture;
     cardElement.querySelector('.card__img').alt = element.name;
-
     cardElement.querySelector('.card__price').childNodes[0].textContent = element.price + ' ';
     cardElement.querySelector('.card__weight').textContent = '/ ' + element.weight + 'Г';
-
-    cardElement.querySelector('.stars__rating').classList.remove('stars__rating--five');
     cardElement.querySelector('.stars__rating').classList.add(RATING_CLASSES[element.rating.value - 1]);
     cardElement.querySelector('.star__count').textContent = '(' + element.rating.number + ')';
-
-    cardElement.querySelector('.card__characteristic').textContent = element.nutritionFacts.sugar ?
-      'Содержит сахар' : 'Без сахара';
+    cardElement.querySelector('.card__characteristic').textContent = element.nutritionFacts.sugar ? 'Содержит сахар' : 'Без сахара';
     cardElement.querySelector('.card__composition-list').textContent = element.nutritionFacts.contents;
 
     return cardElement;
   };
 
+  /**
+   * Отрисовка карточек добавленных в корзины
+   * @param {Card} element
+   * @return {Node}
+   */
+
+  var renderOrderCard = function (element) {
+    var cardElement = cardOrderTemplate.cloneNode(true);
+
+    cardElement.querySelector('.card-order__title').textContent = element.name;
+    cardElement.querySelector('.card-order__img').src = element.picture;
+    cardElement.querySelector('.card-order__img').alt = element.name;
+    cardElement.querySelector('.card-order__price').textContent = element.price + ' ₽';
+    cardElement.querySelector('.card-order__count').value = element.amount;
+
+    return cardElement;
+  }
 
 })();
