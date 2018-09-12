@@ -140,16 +140,17 @@
   };
 
   var shufflePhotos = window.utils.shuffleElements(candyOptions.PHOTO_PICTURE);
-  var catalog = document.querySelector(".catalog");
-  var catalogCards = catalog.querySelector(".catalog__cards");
-  var catalogLoad = catalog.querySelector(".catalog__load");
-  var goodsCards = document.querySelector(".goods__cards");
+  var catalog = document.querySelector('.catalog');
+  var catalogCards = catalog.querySelector('.catalog__cards');
+  var catalogLoad = catalog.querySelector('.catalog__load');
+  var goodsCards = document.querySelector('.goods__cards');
   var goodsCardEmpty = document.querySelector('.goods__card-empty');
-  var cardTemplate = document.querySelector("#card").content.querySelector(".card");
-  var cardOrderTemplate = document.querySelector("#card-order").content.querySelector(".card-order");
+  var cardTemplate = document.querySelector('#card').content.querySelector('.card');
+  var cardOrderTemplate = document.querySelector('#card-order').content.querySelector('.card-order');
 
   /**
    * Функция получения ссылки
+   * @param {Array.<string>} photoLinks
    * @param {number} index
    * @return {string}
    */
@@ -213,7 +214,7 @@
         energy: window.utils.getRandomInRange(candyOptions.nutririonEnergy.MIN, candyOptions.nutririonEnergy.MAX),
         contents: getNutritionContent(candyOptions.NUTRITION_CONTENT)
       }
-    }
+    };
   };
 
   /**
@@ -227,7 +228,7 @@
       return 'card--soon';
     }
     return amount > 5 ? 'card--in-stock' : 'card--little';
-  }
+  };
 
   /**
    * Отрисовка карточки каталога
@@ -269,7 +270,7 @@
     cardElement.querySelector('.card-order__count').value = element.amount;
 
     return cardElement;
-  }
+  };
 
   /**
  * Функция получения массива карточек
@@ -288,7 +289,7 @@
   /**
    * Функция получения фрагмента
    * @param {Array.<Card>} CardData
-   * @property {boolean} typeCard для каталога / для корзины
+   * @param {boolean} typeCard для каталога / для корзины
    * @return {Node}
    */
   var renderCardFragment = function (CardData, typeCard) {
