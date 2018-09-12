@@ -271,4 +271,49 @@
     return cardElement;
   }
 
+  /**
+ * Функция получения массива карточек
+ * @param {number} quantity
+ * @return {Array.<Card>}
+ */
+  var getCardData = function (quantity) {
+    var CardData = [];
+
+    for (var i = 0; i < quantity; i++) {
+      CardData.push(getData(i));
+    }
+    return CardData;
+  };
+
+  /**
+   * Функция получения фрагмента
+   * @param {Array.<Card>} CardData
+   * @property {boolean} typeCard для каталога / для корзины
+   * @return {Node}
+   */
+  var renderCardFragment = function (CardData, typeCard) {
+    var fragment = document.createDocumentFragment();
+    CardData.forEach(function (item) {
+      fragment.appendChild((typeCard ? renderCard : renderOrderCard)(item));
+    });
+    return fragment;
+  };
+
+  // Функция инициилизации страницы
+  var initPage = function () {
+    var cardList = getCardData(QUANTITY_CARDS);
+    var cardOrderList = getCardData(QUANTITY_ORDERS);
+
+    catalogCards.classList.remove('catalog__cards--load');
+    catalogLoad.classList.add('visually-hidden');
+    goodsCards.classList.remove('goods__cards--empty');
+    goodsCardEmpty.classList.add('visually-hidden');
+
+
+    catalogCards.appendChild(renderCardFragment(cardList, CATALOG_CARD));
+    goodsCards.appendChild(renderCardFragment(cardOrderList, GOODS_CARD));
+  };
+
+  initPage();
+
 })();
