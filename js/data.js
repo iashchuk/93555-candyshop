@@ -159,16 +159,6 @@
   };
 
   /**
-   * Функция получения строки произвольной длины из массива
-   * @param {Array} arr
-   * @return {string}
-   */
-  var getNutritionContent = function (arr) {
-    var newArr = window.utils.shuffleElements(arr);
-    return newArr.slice(0, window.utils.getRandomInRange(1, newArr.length)).join(', ');
-  };
-
-  /**
    * @typedef {Object} Rating
    * @property {number} value
    * @property {number} number
@@ -212,7 +202,7 @@
       nutritionFacts: {
         sugar: window.utils.getRandomElement(candyOptions.nutritionSugar),
         energy: window.utils.getRandomInRange(candyOptions.nutririonEnergy.MIN, candyOptions.nutririonEnergy.MAX),
-        contents: getNutritionContent(candyOptions.NUTRITION_CONTENT)
+        contents: window.utils.getRandomString(candyOptions.NUTRITION_CONTENT)
       }
     };
   };
