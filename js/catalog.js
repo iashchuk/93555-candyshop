@@ -4,6 +4,7 @@
 
   var QUANTITY_CARDS = 26;
   var CATALOG_CARD = 1;
+  var GOODS_CARD = 0;
 
   var RATING_CLASSES = [
     'stars__rating--one',
@@ -18,6 +19,12 @@
   var catalogLoad = catalog.querySelector('.catalog__load');
   var cardTemplate = document.querySelector('#card').content.querySelector('.card');
   var cardOrderTemplate = document.querySelector('#card-order').content.querySelector('.card-order');
+  var goodsCards = document.querySelector('.goods__cards');
+  var goodsCardEmpty = document.querySelector('.goods__card-empty');
+  var goodsCardEmptyTemplate = goodsCardEmpty.cloneNode(true);
+  var goodsTotalBasket = document.querySelector('.goods__total');
+  var goodsTotalHeader = document.querySelector('.main-header__basket');
+  var order = [];
 
   /**
    * Функция получения класса количества наличия товара
