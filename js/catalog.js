@@ -39,6 +39,46 @@
     return amount > 5 ? 'card--in-stock' : 'card--little';
   };
 
+  var checkContain = function (orderList, element) {
+    var isContained = false;
+    orderList.forEach(function (item) {
+      if (item.name === element.name) {
+        isContained = true;
+      }
+    });
+    return isContained;
+  };
+
+  var getOrderElement = function (element) {
+    var orderElelement = Object.assign({total: 1}, element);
+
+    delete orderElelement.weight;
+    delete orderElelement.rating;
+    delete orderElelement.nutritionFacts;
+
+    return orderElelement;
+  };
+
+  var addGoodToBasket = function (element) {
+    var isContained = checkContain(order, element);
+
+    if (isContained) {
+      order.forEach(function (item) {
+        if (item.name === element.name && item.total < item.amount) {
+          item.total++;
+        }
+      });
+    } else if (element.amount > 0) {
+      order.push(getOrderElement(element));
+    } else {
+      return;
+    }
+
+    goodsTotalBasket.classList.remove('visually-hidden');
+    goodsCards.innerHTML = '';
+    goodsCards.appendChild(renderCardFragment(order, GOODS_CARD));
+  };
+
   /**
    * Отрисовка карточки каталога
    * @param {Card} element
