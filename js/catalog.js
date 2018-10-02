@@ -68,6 +68,24 @@
     goodsTotalHeader.textContent = 'В корзине ' + total + '. Итого за ' + total + ': ' + getTotalOrder(order).price + ' ₽';
   };
 
+  var onOrderCardCloseClick = function (element) {
+    order.forEach(function (item, index) {
+      if (item.name === element.name) {
+        order.splice(index, 1);
+      }
+    });
+
+    goodsCards.innerHTML = '';
+
+    if (order.length) {
+      goodsCards.appendChild(renderCardFragment(order, GOODS_CARD));
+    } else {
+      goodsCards.appendChild(goodsCardEmptyTemplate);
+      goodsTotalBasket.classList.add('visually-hidden');
+      goodsTotalHeader.textContent = 'В корзине ничего нет';
+    }
+  };
+
   var getOrderElement = function (element) {
     var orderElelement = Object.assign({
       total: 1
