@@ -36,9 +36,49 @@
     return arrayElements;
   };
 
+  /**
+   * Функция получения строки произвольной длины из массива
+   * @param {Array} arrayElements
+   * @return {string}
+   */
+  var getRandomString = function (arrayElements) {
+    var newArray = shuffleElements(arrayElements);
+    return newArray.slice(0, getRandomInRange(1, newArray.length)).join(', ');
+  };
+
+  /**
+   * Функция получения массива случайной длины
+   * @param {Array} arrayElements
+   * @return {Array}
+   */
+  var getRandomArray = function (arrayElements) {
+    var newLength = getRandomInRange(1, arrayElements.length);
+    var tempArray = shuffleElements(arrayElements);
+    var newArray = [];
+    for (var i = 0; i < newLength; i++) {
+      newArray.push(tempArray[i]);
+    }
+    return newArray;
+  };
+
+  /**
+   * Функция получения правильного окончания слова
+   * @param {number} number
+   * @param {Array.<string>} meanings
+   * @return {string}
+   */
+  var getDeclension = function (number, meanings) {
+    var cases = [2, 0, 1, 1, 1, 2];
+    return meanings[(number % 100 > 4 && number % 100 < 20) ?
+      2 : cases[(number % 10 < 5) ? number % 10 : 5]];
+  };
+
   window.utils = {
     getRandomElement: getRandomElement,
     getRandomInRange: getRandomInRange,
-    shuffleElements: shuffleElements
+    shuffleElements: shuffleElements,
+    getRandomString: getRandomString,
+    getRandomArray: getRandomArray,
+    getDeclension: getDeclension
   };
 })();
