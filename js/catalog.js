@@ -170,6 +170,9 @@
 
   var renderOrderCard = function (element) {
     var cardElement = cardOrderTemplate.cloneNode(true);
+    var closeBtn = cardElement.querySelector('.card-order__close');
+    var decreaseBtn = cardElement.querySelector('.card-order__btn--decrease');
+    var increaseBtn = cardElement.querySelector('.card-order__btn--increase');
 
     cardElement.querySelector('.card-order__title').textContent = element.name;
     cardElement.querySelector('.card-order__img').src = element.picture;
@@ -178,6 +181,35 @@
     var amount = cardElement.querySelector('.card-order__count').value;
     cardElement.querySelector('.card-order__price').textContent = amount * element.price + ' ₽';
 
+    closeBtn.addEventListener('click', function (evt) {
+      evt.preventDefault();
+      onOrderCardCloseClick(element);
+      renderTotalOrder();
+
+      if (!order.length) {
+        goodsTotalHeader.textContent = 'В корзине ничего нет';
+      }
+    });
+
+    decreaseBtn.addEventListener('click', function () {
+      if (element.total === 1) {
+        onOrderCardCloseClick(element);
+      } else {
+        element.total--;
+        cardElement.querySelector('.card-order__count').value = element.total;
+        cardElement.querySelector('.card-order__price').textContent = element.total * element.price + ' ₽';
+      }
+      renderTotalOrder();
+    });
+
+    increaseBtn.addEventListener('click', function () {
+      if (element.amount > element.total) {
+        element.total++;
+        cardElement.querySelector('.card-order__count').value = element.total;
+        cardElement.querySelector('.card-order__price').textContent = element.total * element.price + ' ₽';
+        renderTotalOrder();
+      }
+    });
     return cardElement;
   };
 
