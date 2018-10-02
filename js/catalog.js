@@ -125,6 +125,9 @@
    */
   var renderCard = function (element) {
     var cardElement = cardTemplate.cloneNode(true);
+    var cardBtnAdd = cardElement.querySelector('.card__btn');
+    var cardBtnFavorite = cardElement.querySelector('.card__btn-favorite');
+    var cardBtnComposition = cardElement.querySelector('.card__btn-composition');
 
     cardElement.classList.remove('card--in-stock');
     cardElement.querySelector('.stars__rating').classList.remove('stars__rating--five');
@@ -138,6 +141,23 @@
     cardElement.querySelector('.star__count').textContent = '(' + element.rating.number + ')';
     cardElement.querySelector('.card__characteristic').textContent = element.nutritionFacts.sugar ? 'Содержит сахар' : 'Без сахара';
     cardElement.querySelector('.card__composition-list').textContent = element.nutritionFacts.contents;
+
+    cardBtnAdd.addEventListener('click', function (evt) {
+      evt.preventDefault();
+      addGoodToBasket(element);
+      renderTotalOrder();
+    });
+
+    cardBtnFavorite.addEventListener('click', function (evt) {
+      evt.preventDefault();
+      cardBtnFavorite.classList.toggle('card__btn-favorite--selected');
+      document.activeElement.blur();
+    });
+
+    cardBtnComposition.addEventListener('click', function (evt) {
+      evt.preventDefault();
+      cardElement.querySelector('.card__composition').classList.toggle('card__composition--hidden');
+    });
 
     return cardElement;
   };
