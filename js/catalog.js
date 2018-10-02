@@ -49,8 +49,29 @@
     return isContained;
   };
 
+  var getTotalOrder = function (orderList) {
+    var totalPrice = 0;
+    var totalAmount = 0;
+    for (var i = 0; i < orderList.length; i++) {
+      totalPrice += order[i].price * order[i].total;
+      totalAmount += order[i].total;
+    }
+    return {
+      price: totalPrice,
+      amount: totalAmount
+    };
+  };
+
+  var renderTotalOrder = function () {
+    var total = getTotalOrder(order).amount + ' ' + window.utils.getDeclension(getTotalOrder(order).amount, ['товар', 'товара', 'товаров']);
+    goodsTotalBasket.querySelector('.goods__total-count').textContent = 'Итого за ' + total + ': ' + getTotalOrder(order).price + ' ₽';
+    goodsTotalHeader.textContent = 'В корзине ' + total + '. Итого за ' + total + ': ' + getTotalOrder(order).price + ' ₽';
+  };
+
   var getOrderElement = function (element) {
-    var orderElelement = Object.assign({total: 1}, element);
+    var orderElelement = Object.assign({
+      total: 1
+    }, element);
 
     delete orderElelement.weight;
     delete orderElelement.rating;
