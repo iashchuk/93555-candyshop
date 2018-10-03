@@ -8,6 +8,7 @@
   var paymentCash = document.querySelector('.payment__cash-wrap');
   var paymentFields = document.querySelector('.payment__inputs');
   var cardNumber = paymentFields.querySelector('#payment__card-number');
+  var cardDate = paymentFields.querySelector('#payment__card-date');
 
   var selectPaymentHandler = function (evt) {
     if (evt.target === paymentBtnCard || evt.target === paymentBtnCash) {
@@ -52,9 +53,25 @@
     }
   };
 
+  var cardDateHandler = function () {
+    if (cardDate.value.length === 2) {
+      cardDate.value += '/';
+    }
+  };
+
+  var cardValidDateHandler = function (evt) {
+    if (evt.target.validity.patternMismatch || evt.target.validity.tooShort) {
+      evt.target.setCustomValidity('Введите срок действия карты в формате мм/гг');
+    } else {
+      evt.target.setCustomValidity('');
+    }
+  };
+
 
   paymentMethod.addEventListener('click', selectPaymentHandler);
   cardNumber.addEventListener('keypress', cardNumberHandler);
   cardNumber.addEventListener('change', cardValidNumberHandler);
+  cardDate.addEventListener('keypress', cardDateHandler);
+  cardDate.addEventListener('change', cardValidDateHandler);
 
 })();
