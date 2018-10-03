@@ -1,6 +1,7 @@
 'use strict';
 
 (function () {
+  var form = document.querySelector('form');
   var paymentMethod = document.querySelector('.payment__method');
   var paymentBtnCard = document.querySelector('#payment__card');
   var paymentBtnCash = document.querySelector('#payment__cash');
@@ -10,6 +11,9 @@
   var cardNumber = paymentFields.querySelector('#payment__card-number');
   var cardDate = paymentFields.querySelector('#payment__card-date');
   var cardCVC = paymentFields.querySelector('#payment__card-cvc');
+  var cardHolder = paymentFields.querySelector('#payment__cardholder');
+  var cardStatus = document.querySelector('.payment__card-status');
+  var modalConfirm = document.querySelector('.modal--confirm');
 
   var selectPaymentHandler = function (evt) {
     if (evt.target === paymentBtnCard || evt.target === paymentBtnCash) {
@@ -88,14 +92,31 @@
     }
   };
 
+  var paymentInformationHandler = function () {
+    if (cardNumber.checkValidity() && cardDate.checkValidity() &&
+      cardCVC.checkValidity() && cardHolder.checkValidity()) {
+      cardStatus.textContent = 'Одобрен';
+    } else {
+      cardStatus.textContent = 'Не определён';
+    }
+  };
+
+  var formSubmitHandler = function () {
+    if (form.checkValidity()) {
+      modalConfirm.classList.remove('modal--hidden');
+    }
+  };
+
 
   paymentMethod.addEventListener('click', selectPaymentHandler);
   cardNumber.addEventListener('keypress', cardNumberHandler);
   cardNumber.addEventListener('change', cardValidNumberHandler);
   cardDate.addEventListener('keypress', cardDateHandler);
   cardDate.addEventListener('change', cardValidDateHandler);
-  cardCVC.addEventListener('change', cardValidCVCHandler);
-  cardHolder.addEventListener('change', cardHolderHandler);
+  cardCVC.addEventListener('keypress', cardValidCVCHandler);
+  cardHolder.addEventListener('keypress', cardHolderHandler);
   cardHolder.addEventListener('change', cardValidHolderHandler);
+  paymentFields.addEventListener('input', paymentInformationHandler);
+  form.addEventListener('submit', formSubmitHandler);
 
 })();
