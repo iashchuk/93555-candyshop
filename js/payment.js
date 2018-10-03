@@ -9,6 +9,7 @@
   var paymentFields = document.querySelector('.payment__inputs');
   var cardNumber = paymentFields.querySelector('#payment__card-number');
   var cardDate = paymentFields.querySelector('#payment__card-date');
+  var cardCVC = paymentFields.querySelector('#payment__card-cvc');
 
   var selectPaymentHandler = function (evt) {
     if (evt.target === paymentBtnCard || evt.target === paymentBtnCash) {
@@ -67,11 +68,20 @@
     }
   };
 
+  var cardValidCVCHandler = function (evt) {
+    if (evt.target.validity.patternMismatch || evt.target.validity.tooShort) {
+      evt.target.setCustomValidity('Введите CVC в указанном формате: трёхзначное число с диапазоном значений от 100 до 999');
+    } else {
+      evt.target.setCustomValidity('');
+    }
+  };
+
 
   paymentMethod.addEventListener('click', selectPaymentHandler);
   cardNumber.addEventListener('keypress', cardNumberHandler);
   cardNumber.addEventListener('change', cardValidNumberHandler);
   cardDate.addEventListener('keypress', cardDateHandler);
   cardDate.addEventListener('change', cardValidDateHandler);
+  cardCVC.addEventListener('change', cardValidCVCHandler);
 
 })();
