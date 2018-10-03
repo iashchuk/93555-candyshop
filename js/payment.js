@@ -76,6 +76,18 @@
     }
   };
 
+  var cardHolderHandler = function () {
+    cardHolder.value = cardHolder.value.toUpperCase();
+  };
+
+  var cardValidHolderHandler = function (evt) {
+    if (evt.target.validity.patternMismatch) {
+      evt.target.setCustomValidity('Введите имя и фамилию на английском языке');
+    } else {
+      evt.target.setCustomValidity('');
+    }
+  };
+
 
   paymentMethod.addEventListener('click', selectPaymentHandler);
   cardNumber.addEventListener('keypress', cardNumberHandler);
@@ -83,5 +95,7 @@
   cardDate.addEventListener('keypress', cardDateHandler);
   cardDate.addEventListener('change', cardValidDateHandler);
   cardCVC.addEventListener('change', cardValidCVCHandler);
+  cardHolder.addEventListener('change', cardHolderHandler);
+  cardHolder.addEventListener('change', cardValidHolderHandler);
 
 })();
