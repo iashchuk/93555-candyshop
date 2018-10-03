@@ -6,7 +6,8 @@
   var paymentBtnCash = document.querySelector('#payment__cash');
   var paymentCard = document.querySelector('.payment__card-wrap');
   var paymentCash = document.querySelector('.payment__cash-wrap');
-
+  var paymentFields = document.querySelector('.payment__inputs');
+  var cardNumber = paymentFields.querySelector('#payment__card-number');
 
   var selectPaymentHandler = function (evt) {
     if (evt.target === paymentBtnCard || evt.target === paymentBtnCash) {
@@ -33,7 +34,27 @@
     return total % 10 === 0 ? true : false;
   };
 
+  var cardNumberHandler = function () {
+    var cardLength = cardNumber.value.length;
+    if (cardLength === 4 || cardLength === 9 || cardLength === 14) {
+      cardNumber.value += ' ';
+    }
+  };
+
+
+  var cardValidNumberHandler = function (evt) {
+    if (evt.target.validity.patternMismatch || evt.target.validity.tooShort) {
+      evt.target.setCustomValidity('Введите 16 цифр номера банковской карты в формате ХХХХ ХХХХ ХХХХ ХХХХ');
+    } else if (!checkCardLuhnAlgorithm(evt.target.value)) {
+      evt.target.setCustomValidity('Неправильный номер банковской карты');
+    } else {
+      evt.target.setCustomValidity('');
+    }
+  };
+
 
   paymentMethod.addEventListener('click', selectPaymentHandler);
+  cardNumber.addEventListener('keypress', cardNumberHandler);
+  cardNumber.addEventListener('change', cardValidNumberHandler);
 
 })();
