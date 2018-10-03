@@ -220,7 +220,7 @@
                     </p>
 
                     <p class="text-input text-input--light payment__input-wrap payment__input-wrap--card-date">
-                      <input type="text" class="text-input__input" name="card-date" id="payment__card-date" placeholder="мм/гг" maxlength = "5" pattern = "[0-1]{1}[0-9]{1}/[0-3]{1}[0-9]{1}" required>
+                      <input type="text" class="text-input__input" name="card-date" id="payment__card-date" placeholder="мм/гг" maxlength = "5" pattern = "[0-1]{1}[0-9]{1}/[1-2]{1}[0-9]{1}" required>
                       <label class="text-input__label" for="payment__card-date">мм/гг</label>
                     </p>
 
@@ -232,7 +232,7 @@
                   </div>
                   <div class="payment__cardholder-group">
                     <p class="text-input text-input--light payment__input-wrap payment__input-wrap--cardholder">
-                      <input type="text" class="text-input__input" name="cardholder" id="payment__cardholder" placeholder="ИМЯ ДЕРЖАТЕЛЯ" required>
+                      <input type="text" class="text-input__input" name="cardholder" id="payment__cardholder" placeholder="ИМЯ ДЕРЖАТЕЛЯ" pattern = "[A-Za-z]{2,}\s[A-Za-z]{2,}" required>
                       <label class="text-input__label" for="payment__cardholder">ИМЯ ДЕРЖАТЕЛЯ</label>
                     </p>
 
@@ -486,6 +486,8 @@
   <script src="js/utils.js"></script>
   <script src="js/data.js"></script>
   <script src="js/catalog.js"></script>
+  <script src="js/order.js"></script>
+  <script src="js/payment.js"></script>
 
 </body>
 </html>
