@@ -22,4 +22,14 @@
   bar.style.left = TOGGLE_SIZE + toggleLeft.offsetLeft + 'px';
   bar.style.right = TOGGLE_SIZE + 'px';
 
+  var getPrice = function (toggle) {
+    var coords = toggle.getBoundingClientRect();
+    var toggleCoords = coords.x;
+    var price = Math.round((toggleCoords - rangeStartCoords) / step);
+    return price;
+  };
+
+  minRangePrice.textContent = getPrice(toggleLeft);
+  maxRangePrice.textContent = getPrice(toggleRight);
+
 })();
