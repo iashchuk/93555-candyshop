@@ -14,5 +14,9 @@
     EXTENSION: '.jpg'
   };
 
+  var getPhotoLink = function (photoName) {
+    return photoOptions.PATH + photoName + photoOptions.EXTENSION;
+  };
+
 
 })();
