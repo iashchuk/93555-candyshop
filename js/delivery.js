@@ -9,6 +9,8 @@
   var deliverCourier = document.querySelector('.deliver__courier');
   var deliverPoint = document.querySelectorAll('.deliver__store-item');
   var deliverDescribe = document.querySelector('.deliver__store-describe');
+  var deliverStoresFieldset = document.querySelector('.deliver__stores');
+  var deliverCourierFieldset = document.querySelector('.deliver__entry-fields-wrap');
 
   var photoOptions = {
     PATH: 'img/map/',
@@ -46,16 +48,29 @@
     });
   };
 
-
-  var selectDeliveryHandler = function (evt) {
-    if (evt.target === deliverBtnStore || evt.target === deliverBtnCourier) {
-      deliverStore.classList.toggle('visually-hidden');
-      deliverCourier.classList.toggle('visually-hidden');
-    }
+  var setDeliverFieldsetStatus = function () {
+    deliverCourierFieldset.disabled = deliverBtnStore.checked;
+    deliverStoresFieldset.disabled = deliverBtnCourier.checked;
   };
 
-  selectStore();
-  deliverMethod.addEventListener('click', selectDeliveryHandler);
 
+  var selectDeliveryHandler = function (evt) {
+    if (evt.target === deliverBtnStore) {
+      deliverStore.classList.remove('visually-hidden');
+      deliverCourier.classList.add('visually-hidden');
+    } else if (evt.target === deliverBtnCourier) {
+      deliverStore.classList.add('visually-hidden');
+      deliverCourier.classList.remove('visually-hidden');
+    }
+    setDeliverFieldsetStatus();
+  };
+
+  var initDeliverModule = function () {
+    setDeliverFieldsetStatus();
+    selectStore();
+    deliverMethod.addEventListener('click', selectDeliveryHandler);
+  };
+
+  initDeliverModule();
 
 })();
