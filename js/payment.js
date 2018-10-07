@@ -1,24 +1,39 @@
 'use strict';
 
 (function () {
-  var form = document.querySelector('form');
+  var form = document.querySelector('.buy__form');
   var paymentMethod = document.querySelector('.payment__method');
   var paymentBtnCard = document.querySelector('#payment__card');
   var paymentBtnCash = document.querySelector('#payment__cash');
   var paymentCard = document.querySelector('.payment__card-wrap');
   var paymentCash = document.querySelector('.payment__cash-wrap');
-  var paymentFields = document.querySelector('.payment__inputs');
-  var cardNumber = paymentFields.querySelector('#payment__card-number');
-  var cardDate = paymentFields.querySelector('#payment__card-date');
-  var cardCVC = paymentFields.querySelector('#payment__card-cvc');
-  var cardHolder = paymentFields.querySelector('#payment__cardholder');
+  var paymentFields = paymentCard.querySelectorAll('input');
+  var paymentBlock = document.querySelector('.payment__inputs');
+  var cardNumber = paymentBlock.querySelector('#payment__card-number');
+  var cardDate = paymentBlock.querySelector('#payment__card-date');
+  var cardCVC = paymentBlock.querySelector('#payment__card-cvc');
+  var cardHolder = paymentBlock.querySelector('#payment__cardholder');
   var cardStatus = document.querySelector('.payment__card-status');
-  var modalConfirm = document.querySelector('.modal--confirm');
+
+  var setFieldsStatus = function (fields, isDisabled) {
+    fields.forEach(function (item) {
+      item.disabled = isDisabled;
+    });
+  };
 
   var selectPaymentHandler = function (evt) {
-    if (evt.target === paymentBtnCard || evt.target === paymentBtnCash) {
-      paymentCard.classList.toggle('visually-hidden');
-      paymentCash.classList.toggle('visually-hidden');
+    if (evt.target === paymentBtnCash) {
+      paymentCash.classList.remove('visually-hidden');
+      paymentCard.classList.add('visually-hidden');
+    } else if (evt.target === paymentBtnCard) {
+      paymentCash.classList.add('visually-hidden');
+      paymentCard.classList.remove('visually-hidden');
+    }
+
+    if (paymentBtnCard.checked) {
+      setFieldsStatus(paymentFields, false);
+    } else {
+      setFieldsStatus(paymentFields, true);
     }
   };
 
@@ -101,9 +116,20 @@
     }
   };
 
-  var formSubmitHandler = function () {
+
+  var formSuccessHandler = function () {
+    form.reset();
+    window.message.confirm();
+  };
+
+  var formErrorHandler = function (textMessage) {
+    window.message.error(textMessage);
+  };
+
+  var formSubmitHandler = function (evt) {
     if (form.checkValidity()) {
-      modalConfirm.classList.remove('modal--hidden');
+      window.backend.upload(formSuccessHandler, formErrorHandler, new FormData(form));
+      evt.preventDefault();
     }
   };
 
@@ -113,10 +139,10 @@
   cardNumber.addEventListener('change', cardValidNumberHandler);
   cardDate.addEventListener('keypress', cardDateHandler);
   cardDate.addEventListener('change', cardValidDateHandler);
-  cardCVC.addEventListener('keypress', cardValidCVCHandler);
-  cardHolder.addEventListener('keypress', cardHolderHandler);
+  cardCVC.addEventListener('change', cardValidCVCHandler);
+  cardHolder.addEventListener('input', cardHolderHandler);
   cardHolder.addEventListener('change', cardValidHolderHandler);
-  paymentFields.addEventListener('input', paymentInformationHandler);
+  paymentBlock.addEventListener('change', paymentInformationHandler);
   form.addEventListener('submit', formSubmitHandler);
 
 })();

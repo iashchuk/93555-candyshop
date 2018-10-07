@@ -2,7 +2,7 @@
 
 (function () {
 
-  var PRICE_RANGE = 200;
+  var PRICE_RANGE = 100;
   var TOGGLE_SIZE = 10;
   var range = document.querySelector('.range');
   var toggleLeft = range.querySelector('.range__btn--left');
@@ -29,6 +29,7 @@
     var price = Math.round((toggleCoords - rangeStartCoords) / step);
     return price;
   };
+
 
   minRangePrice.textContent = getPrice(toggleLeft);
   maxRangePrice.textContent = getPrice(toggleRight);
@@ -61,6 +62,8 @@
     var onMouseUp = function (upEvt) {
       upEvt.preventDefault();
 
+      window.catalog.filterCards();
+
       document.removeEventListener('mousemove', onMouseMove);
       document.removeEventListener('mouseup', onMouseUp);
     };
@@ -74,5 +77,12 @@
   };
 
   filterActivate();
+
+  window.priceChangeHandler = function (element) {
+    var minPrice = getPrice(toggleLeft);
+    var maxPrice = getPrice(toggleRight);
+    return (element.price >= minPrice && element.price <= maxPrice);
+  };
+
 
 })();

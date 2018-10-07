@@ -1,7 +1,6 @@
 'use strict';
 
 (function () {
-  var QUANTITY_CARDS = 26;
 
   var RATING_CLASSES = [
     'stars__rating--one',
@@ -15,6 +14,9 @@
   var catalogCards = catalog.querySelector('.catalog__cards');
   var catalogLoad = catalog.querySelector('.catalog__load');
   var cardTemplate = document.querySelector('#card').content.querySelector('.card');
+
+  var loadCards = [];
+  var filteredCards = [];
 
 
   /**
@@ -46,7 +48,7 @@
     cardElement.querySelector('.stars__rating').classList.remove('stars__rating--five');
     cardElement.classList.add(getAmountClass(element.amount));
     cardElement.querySelector('.card__title').textContent = element.name;
-    cardElement.querySelector('.card__img').src = element.picture;
+    cardElement.querySelector('.card__img').src = 'img/cards/' + element.picture;
     cardElement.querySelector('.card__img').alt = element.name;
     cardElement.querySelector('.card__price').childNodes[0].textContent = element.price + ' ';
     cardElement.querySelector('.card__weight').textContent = '/ ' + element.weight + 'Г';
@@ -76,21 +78,6 @@
     return cardElement;
   };
 
-
-  /**
-   * Функция получения массива карточек
-   * @param {number} quantity
-   * @return {Array.<Card>}
-   */
-  var getCardData = function (quantity) {
-    var CardData = [];
-
-    for (var i = 0; i < quantity; i++) {
-      CardData.push(window.getData(i));
-    }
-    return CardData;
-  };
-
   /**
    * Функция получения фрагмента
    * @param {Array.<Card>} CardData
@@ -105,13 +92,37 @@
     return fragment;
   };
 
-  var initPage = function () {
-    var cardList = getCardData(QUANTITY_CARDS);
-    catalogCards.classList.remove('catalog__cards--load');
-    catalogLoad.classList.add('visually-hidden');
-    catalogCards.appendChild(renderCardFragment(cardList));
+
+  var updateCatalog = function (CardData) {
+    catalogCards.innerHTML = '';
+    catalogCards.appendChild(renderCardFragment(CardData));
   };
 
-  initPage();
+  var filterCards = function () {
+    filteredCards = loadCards.slice(0);
+    filteredCards = loadCards.filter(window.priceChangeHandler);
+    updateCatalog(filteredCards);
+  };
+
+  var successLoadHandler = function (data) {
+    loadCards = data.slice(0);
+    catalogCards.appendChild(renderCardFragment(loadCards));
+  };
+
+  var errorLoadHandler = function (textMessage) {
+    window.message.error(textMessage);
+  };
+
+  var activateCatalog = function () {
+    window.backend.load(successLoadHandler, errorLoadHandler);
+    catalogCards.classList.remove('catalog__cards--load');
+    catalogLoad.classList.add('visually-hidden');
+  };
+
+  activateCatalog();
+
+  window.catalog = {
+    filterCards: filterCards
+  };
 
 })();
