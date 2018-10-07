@@ -41,7 +41,7 @@
     goodsTotalHeader.textContent = 'В корзине ' + total + '. Итого за ' + total + ': ' + getTotalOrder(order).price + ' ₽';
   };
 
-  var onOrderCardCloseClick = function (element) {
+  var orderCardCloseHandler = function (element) {
     order.forEach(function (item, index) {
       if (item.name === element.name) {
         order.splice(index, 1);
@@ -105,7 +105,7 @@
     var increaseBtn = cardElement.querySelector('.card-order__btn--increase');
 
     cardElement.querySelector('.card-order__title').textContent = element.name;
-    cardElement.querySelector('.card-order__img').src = element.picture;
+    cardElement.querySelector('.card-order__img').src = 'img/cards/' + element.picture;
     cardElement.querySelector('.card-order__img').alt = element.name;
     cardElement.querySelector('.card-order__count').value = element.total;
     var amount = cardElement.querySelector('.card-order__count').value;
@@ -113,7 +113,7 @@
 
     closeBtn.addEventListener('click', function (evt) {
       evt.preventDefault();
-      onOrderCardCloseClick(element);
+      orderCardCloseHandler(element);
       renderTotalOrder();
 
       if (!order.length) {
@@ -124,7 +124,7 @@
 
     decreaseBtn.addEventListener('click', function () {
       if (element.total === 1) {
-        onOrderCardCloseClick(element);
+        orderCardCloseHandler(element);
         if (!order.length) {
           deactivateFormFields();
         }
