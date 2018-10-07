@@ -52,5 +52,17 @@
     }
   };
 
+  var load = function (onLoad, onError) {
+    setupXHR(onLoad, onError, requestData.url.LOAD, 'GET', requestData.timeout.LOAD);
+  };
+
+  var upload = function (onLoad, onError, data) {
+    setupXHR(onLoad, onError, requestData.url.UPLOAD, 'POST', requestData.timeout.UPLOAD, data);
+  };
+
+  window.backend = {
+    load: load,
+    upload: upload
+  };
 
 })();
