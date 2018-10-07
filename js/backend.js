@@ -21,5 +21,36 @@
     }
   };
 
+  var setupXHR = function (onLoad, onError, url, method, timeout, data) {
+    var xhr = new XMLHttpRequest();
+    xhr.responseType = 'json';
+
+    xhr.addEventListener('load', function () {
+      if (xhr.status === requestData.status.OK) {
+        onLoad(xhr.response);
+      } else {
+        onError(requestData.message.ERROR_LOAD + xhr.status + ' ' + xhr.statusText);
+      }
+    });
+
+    xhr.addEventListener('error', function () {
+      onError(requestData.message.ERROR_SERVER);
+    });
+
+    xhr.addEventListener('timeout', function () {
+      onError(requestData.message.ERROR_TIMEOUT + xhr.timeout + ' мс');
+    });
+
+    xhr.timeout = timeout;
+
+    xhr.open(method, url);
+
+    if (typeof data !== 'undefined') {
+      xhr.send(data);
+    } else {
+      xhr.send();
+    }
+  };
+
 
 })();
