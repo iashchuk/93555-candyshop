@@ -52,15 +52,16 @@
     });
   };
 
+  var setDeliverFieldsetStatus = function () {
+    deliverCourierFieldset.disabled = deliverBtnStore.checked;
+    deliverStoresFieldset.disabled = deliverBtnCourier.checked;
+  };
+
   var resetDeliveryMethod = function () {
     deliverStore.classList.remove('visually-hidden');
     deliverCourier.classList.add('visually-hidden');
     getStoreInfo(deliverPoints[0]);
-  };
-
-  var setDeliverFieldsetStatus = function () {
-    deliverCourierFieldset.disabled = deliverBtnStore.checked;
-    deliverStoresFieldset.disabled = deliverBtnCourier.checked;
+    deliverCourierFieldset.disabled = true;
   };
 
 
