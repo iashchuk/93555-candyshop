@@ -15,10 +15,16 @@
   var cardHolder = paymentBlock.querySelector('#payment__cardholder');
   var cardStatus = document.querySelector('.payment__card-status');
 
+
   var setFieldsStatus = function (fields, isDisabled) {
     fields.forEach(function (item) {
       item.disabled = isDisabled;
     });
+  };
+
+  var resetPaymentMethod = function () {
+    paymentCash.classList.add('visually-hidden');
+    paymentCard.classList.remove('visually-hidden');
   };
 
   var selectPaymentHandler = function (evt) {
@@ -26,8 +32,7 @@
       paymentCash.classList.remove('visually-hidden');
       paymentCard.classList.add('visually-hidden');
     } else if (evt.target === paymentBtnCard) {
-      paymentCash.classList.add('visually-hidden');
-      paymentCard.classList.remove('visually-hidden');
+      resetPaymentMethod();
     }
 
     if (paymentBtnCard.checked) {
@@ -52,7 +57,7 @@
         }
       }
     }
-    return total % 10 === 0 ? true : false;
+    return (total % 10 === 0);
   };
 
   var cardNumberHandler = function () {
@@ -116,7 +121,6 @@
     }
   };
 
-
   var formSuccessHandler = function () {
     form.reset();
     window.message.confirm();
@@ -126,23 +130,34 @@
     window.message.error(textMessage);
   };
 
+
   var formSubmitHandler = function (evt) {
     if (form.checkValidity()) {
-      window.backend.upload(formSuccessHandler, formErrorHandler, new FormData(form));
       evt.preventDefault();
+      window.backend.upload(formSuccessHandler, formErrorHandler, new FormData(form));
+      resetPaymentMethod();
+      window.delivery.reset();
+      window.order.clean();
+      window.order.deactivateFormFields();
+      window.filter.reset();
+      window.price.reset();
+      window.catalog.init();
     }
   };
 
+  var initPayment = function () {
+    paymentMethod.addEventListener('click', selectPaymentHandler);
+    cardNumber.addEventListener('keypress', cardNumberHandler);
+    cardNumber.addEventListener('change', cardValidNumberHandler);
+    cardDate.addEventListener('keypress', cardDateHandler);
+    cardDate.addEventListener('change', cardValidDateHandler);
+    cardCVC.addEventListener('change', cardValidCVCHandler);
+    cardHolder.addEventListener('input', cardHolderHandler);
+    cardHolder.addEventListener('change', cardValidHolderHandler);
+    paymentBlock.addEventListener('change', paymentInformationHandler);
+    form.addEventListener('submit', formSubmitHandler);
+  };
 
-  paymentMethod.addEventListener('click', selectPaymentHandler);
-  cardNumber.addEventListener('keypress', cardNumberHandler);
-  cardNumber.addEventListener('change', cardValidNumberHandler);
-  cardDate.addEventListener('keypress', cardDateHandler);
-  cardDate.addEventListener('change', cardValidDateHandler);
-  cardCVC.addEventListener('change', cardValidCVCHandler);
-  cardHolder.addEventListener('input', cardHolderHandler);
-  cardHolder.addEventListener('change', cardValidHolderHandler);
-  paymentBlock.addEventListener('change', paymentInformationHandler);
-  form.addEventListener('submit', formSubmitHandler);
+  initPayment();
 
 })();
