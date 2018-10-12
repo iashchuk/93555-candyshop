@@ -2,9 +2,6 @@
 
 (function () {
 
-  /**
-   * @constant {number}
-   */
   var ESC_KEYCODE = 27;
 
   var modalConfirm = document.querySelector('.modal--confirm');
