@@ -12,11 +12,6 @@
   var deliverStoresFieldset = document.querySelector('.deliver__stores');
   var deliverCourierFieldset = document.querySelector('.deliver__entry-fields-wrap');
 
-  var photoOptions = {
-    PATH: 'img/map/',
-    EXTENSION: '.jpg'
-  };
-
   var AddressList = {
     'academicheskaya': 'проспект Науки, д. 19, корп. 3, литер А, ТК «Платформа», 3-й этаж, секция 310',
     'vasileostrovskaya': 'Адрес #2',
@@ -29,6 +24,12 @@
     'chernishevskaya': 'Адрес #9',
     'tehinstitute': 'Адрес #10'
   };
+
+  var photoOptions = {
+    PATH: 'img/map/',
+    EXTENSION: '.jpg'
+  };
+
 
   var getPhotoLink = function (photoName) {
     return photoOptions.PATH + photoName + photoOptions.EXTENSION;

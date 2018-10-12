@@ -7,10 +7,10 @@
   var goodsCardEmptyTemplate = goodsCardEmpty.cloneNode(true);
   var goodsTotalBasket = document.querySelector('.goods__total');
   var goodsTotalHeader = document.querySelector('.main-header__basket');
-  var order = [];
-
   var orderFormFields = document.querySelectorAll('.text-input__input');
   var orderFormSubmit = document.querySelector('.buy__submit-btn');
+  var orderCards = [];
+
 
   var checkContain = function (orderList, element) {
     var isContained = false;
@@ -26,8 +26,8 @@
     var totalPrice = 0;
     var totalAmount = 0;
     for (var i = 0; i < orderList.length; i++) {
-      totalPrice += order[i].price * order[i].total;
-      totalAmount += order[i].total;
+      totalPrice += orderCards[i].price * orderCards[i].total;
+      totalAmount += orderCards[i].total;
     }
     return {
       price: totalPrice,
@@ -36,30 +36,30 @@
   };
 
   var renderTotalOrder = function () {
-    var total = getTotalOrder(order).amount + ' ' + window.utils.getDeclension(getTotalOrder(order).amount, ['товар', 'товара', 'товаров']);
-    goodsTotalBasket.querySelector('.goods__total-count').textContent = 'Итого за ' + total + ': ' + getTotalOrder(order).price + ' ₽';
-    goodsTotalHeader.textContent = 'В корзине ' + total + '. Итого за ' + total + ': ' + getTotalOrder(order).price + ' ₽';
+    var total = getTotalOrder(orderCards).amount + ' ' + window.utils.getDeclension(getTotalOrder(orderCards).amount, ['товар', 'товара', 'товаров']);
+    goodsTotalBasket.querySelector('.goods__total-count').textContent = 'Итого за ' + total + ': ' + getTotalOrder(orderCards).price + ' ₽';
+    goodsTotalHeader.textContent = 'В корзине ' + total + '. Итого за ' + total + ': ' + getTotalOrder(orderCards).price + ' ₽';
   };
 
   var cleanOrder = function () {
     goodsCards.innerHTML = '';
-    order = [];
+    orderCards = [];
     goodsCards.appendChild(goodsCardEmptyTemplate);
     goodsTotalBasket.classList.add('visually-hidden');
     goodsTotalHeader.textContent = 'В корзине ничего нет';
   };
 
   var orderCardCloseHandler = function (element) {
-    order.forEach(function (item, index) {
+    orderCards.forEach(function (item, index) {
       if (item.name === element.name) {
-        order.splice(index, 1);
+        orderCards.splice(index, 1);
       }
     });
 
     goodsCards.innerHTML = '';
 
-    if (order.length) {
-      goodsCards.appendChild(renderOrderCardFragment(order));
+    if (orderCards.length) {
+      goodsCards.appendChild(renderOrderCardFragment(orderCards));
     } else {
       cleanOrder();
     }
@@ -78,21 +78,21 @@
   };
 
   var addGoodToBasket = function (element) {
-    var isContained = checkContain(order, element);
+    var isContained = checkContain(orderCards, element);
     if (isContained) {
-      order.forEach(function (item) {
+      orderCards.forEach(function (item) {
         if (item.name === element.name && item.total < item.amount) {
           item.total++;
         }
       });
-    } else if (element.amount > 0) {
-      order.push(getOrderElement(element));
+    } else if (element.amount) {
+      orderCards.push(getOrderElement(element));
     } else {
       return;
     }
     goodsTotalBasket.classList.remove('visually-hidden');
     goodsCards.innerHTML = '';
-    goodsCards.appendChild(renderOrderCardFragment(order));
+    goodsCards.appendChild(renderOrderCardFragment(orderCards));
   };
 
 
@@ -114,7 +114,7 @@
       orderCardCloseHandler(element);
       renderTotalOrder();
 
-      if (!order.length) {
+      if (!orderCards.length) {
         deactivateFormFields();
         goodsTotalHeader.textContent = 'В корзине ничего нет';
       }
@@ -123,7 +123,7 @@
     decreaseBtn.addEventListener('click', function () {
       if (element.total === 1) {
         orderCardCloseHandler(element);
-        if (!order.length) {
+        if (!orderCards.length) {
           deactivateFormFields();
         }
       } else {
@@ -154,7 +154,7 @@
   };
 
   var getAvailabilityStatus = function (element) {
-    var status = order.some(function (item) {
+    var status = orderCards.some(function (item) {
       return (item.name === element.name && item.amount === element.amount);
     });
     return status;

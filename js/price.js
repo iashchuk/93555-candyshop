@@ -4,6 +4,7 @@
 
   var PRICE_RANGE = 100;
   var TOGGLE_SIZE = 10;
+
   var range = document.querySelector('.range');
   var toggleLeft = range.querySelector('.range__btn--left');
   var toggleRight = range.querySelector('.range__btn--right');

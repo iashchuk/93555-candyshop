@@ -2,6 +2,8 @@
 
 (function () {
 
+  var LITTLE_QUANTITY = 5;
+
   var RATING_CLASSES = [
     'stars__rating--one',
     'stars__rating--two',
@@ -11,22 +13,21 @@
   ];
 
   var cardTemplate = document.querySelector('#card').content.querySelector('.card');
-
-  var loadData = [];
-  var catalogData = loadData.slice();
-  var favoriteCards = [];
-
   var filter = document.querySelector('.filter__form');
   var filterFavorite = document.querySelector('#filter-favorite');
   var filterAvailability = document.querySelector('#filter-availability');
   var showAllBtn = document.querySelector('.catalog__submit');
 
+  var loadCards = [];
+  var catalogCards = loadCards.slice();
+  var favoriteCards = [];
+
 
   var getAmountClass = function (amount) {
-    if (amount === 0) {
+    if (!amount) {
       return 'card--soon';
     }
-    return amount > 5 ? 'card--in-stock' : 'card--little';
+    return amount > LITTLE_QUANTITY ? 'card--in-stock' : 'card--little';
   };
 
 
@@ -86,7 +87,7 @@
 
 
   var getAvailabilityProducts = function () {
-    var products = loadData.filter(function (item) {
+    var products = loadCards.filter(function (item) {
       return (!window.order.getAvailabilityStatus(item) && item.amount > 0);
     });
     window.filter.getAmountByAvailability(products);
@@ -95,21 +96,21 @@
 
 
   var priceChangeHandler = function () {
-    catalogData = loadData.filter(window.price.set).slice();
-    window.filter.caseChangeHandler(catalogData);
-    window.filter.getAmountProducts(catalogData);
+    catalogCards = loadCards.filter(window.price.set).slice();
+    window.filter.caseChangeHandler(catalogCards);
+    window.filter.getAmountProducts(catalogCards);
   };
 
 
   var initCatalog = function () {
-    catalogData = loadData.filter(window.price.set);
-    window.filter.getAmountProducts(catalogData);
+    catalogCards = loadCards.filter(window.price.set);
+    window.filter.getAmountProducts(catalogCards);
     window.filter.getAmountFavorite(favoriteCards);
-    window.filter.updateCatalog(catalogData);
+    window.filter.updateCatalog(catalogCards);
   };
 
   var successLoadHandler = function (data) {
-    loadData = data.slice();
+    loadCards = data.slice();
     initCatalog();
     window.filter.catalogLoadHandler();
   };
@@ -132,7 +133,7 @@
       window.catalog.priceChangeHandler();
       window.filter.caseMarkHandler(filterAvailability, getAvailabilityProducts());
     } else {
-      window.filter.caseChangeHandler(catalogData);
+      window.filter.caseChangeHandler(catalogCards);
     }
   });
 

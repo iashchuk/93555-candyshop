@@ -9,7 +9,7 @@
     'Зефир'
   ];
 
-  var catalogCards = document.querySelector('.catalog__cards');
+  var catalog = document.querySelector('.catalog__cards');
   var catalogLoad = document.querySelector('.catalog__load');
   var catalogFilter = document.querySelector('.catalog__sidebar');
   var allCases = catalogFilter.querySelectorAll('.input-btn__input');
@@ -20,8 +20,8 @@
   var productPriceCount = document.querySelector('.range__count');
   var productFavoriteCount = document.querySelector('.input-btn__item-count--favorite');
   var productAvailabilityCount = document.querySelector('.input-btn__item-count--availability');
-  var productTypeCount = document.querySelectorAll('.input-btn__item-count--type');
-  var productPropertyCount = document.querySelectorAll('.input-btn__item-count--property');
+  var productKindsCount = document.querySelectorAll('.input-btn__item-count--type');
+  var productPropertiesCount = document.querySelectorAll('.input-btn__item-count--property');
 
   var propertyCases = {
     sugar: function (element) {
@@ -37,7 +37,7 @@
 
   var catalogLoadHandler = function () {
     catalogLoad.classList.add('visually-hidden');
-    catalogCards.classList.remove('catalog__cards--load');
+    catalog.classList.remove('catalog__cards--load');
   };
 
   var renderCardFragment = function (cardData) {
@@ -49,13 +49,13 @@
   };
 
   var updateCatalog = function (cardData) {
-    catalogCards.innerHTML = '';
-    catalogCards.appendChild(renderCardFragment(cardData));
+    catalog.innerHTML = '';
+    catalog.appendChild(renderCardFragment(cardData));
   };
 
   var activateEmptyCase = function () {
-    catalogCards.innerHTML = '';
-    catalogCards.appendChild(emptyCase);
+    catalog.innerHTML = '';
+    catalog.appendChild(emptyCase);
   };
 
   var sortCatalog = function (cardData) {
@@ -120,16 +120,16 @@
     var amount = cardData.filter(function (item) {
       return item.kind === kind;
     });
-    productTypeCount[index].textContent = '(' + amount.length + ')';
+    productKindsCount[index].textContent = '(' + amount.length + ')';
   };
 
 
   var getAmountByProperty = function (cardData) {
-    productPropertyCount.forEach(function (property, index) {
+    productPropertiesCount.forEach(function (property, index) {
       var amount = cardData.filter(function (item) {
         return propertyCases[property.id](item);
       });
-      productPropertyCount[index].textContent = '(' + amount.length + ')';
+      productPropertiesCount[index].textContent = '(' + amount.length + ')';
     });
   };
 
