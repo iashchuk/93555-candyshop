@@ -41,6 +41,14 @@
     goodsTotalHeader.textContent = 'В корзине ' + total + '. Итого за ' + total + ': ' + getTotalOrder(order).price + ' ₽';
   };
 
+  var cleanOrder = function () {
+    goodsCards.innerHTML = '';
+    order = [];
+    goodsCards.appendChild(goodsCardEmptyTemplate);
+    goodsTotalBasket.classList.add('visually-hidden');
+    goodsTotalHeader.textContent = 'В корзине ничего нет';
+  };
+
   var orderCardCloseHandler = function (element) {
     order.forEach(function (item, index) {
       if (item.name === element.name) {
@@ -53,9 +61,7 @@
     if (order.length) {
       goodsCards.appendChild(renderOrderCardFragment(order));
     } else {
-      goodsCards.appendChild(goodsCardEmptyTemplate);
-      goodsTotalBasket.classList.add('visually-hidden');
-      goodsTotalHeader.textContent = 'В корзине ничего нет';
+      cleanOrder();
     }
   };
 
@@ -73,7 +79,6 @@
 
   var addGoodToBasket = function (element) {
     var isContained = checkContain(order, element);
-
     if (isContained) {
       order.forEach(function (item) {
         if (item.name === element.name && item.total < item.amount) {
@@ -85,18 +90,11 @@
     } else {
       return;
     }
-
     goodsTotalBasket.classList.remove('visually-hidden');
     goodsCards.innerHTML = '';
     goodsCards.appendChild(renderOrderCardFragment(order));
   };
 
-
-  /**
-   * Отрисовка карточек добавленных в корзины
-   * @param {Card} element
-   * @return {Node}
-   */
 
   var renderOrderCard = function (element) {
     var cardElement = cardOrderTemplate.cloneNode(true);
@@ -147,18 +145,19 @@
     return cardElement;
   };
 
-  /**
-   * Функция получения фрагмента
-   * @param {Array.<Card>} CardData
-   * @param {boolean} typeCard для каталога / для корзины
-   * @return {Node}
-   */
-  var renderOrderCardFragment = function (CardData) {
+  var renderOrderCardFragment = function (cardData) {
     var fragment = document.createDocumentFragment();
-    CardData.forEach(function (item) {
+    cardData.forEach(function (item) {
       fragment.appendChild(renderOrderCard(item));
     });
     return fragment;
+  };
+
+  var getAvailabilityStatus = function (element) {
+    var status = order.some(function (item) {
+      return (item.name === element.name && item.amount === element.amount);
+    });
+    return status;
   };
 
   var deactivateFormFields = function () {
@@ -181,6 +180,9 @@
   window.order = {
     addGoodToBasket: addGoodToBasket,
     activeFormFileds: activeFormFileds,
-    renderTotalOrder: renderTotalOrder
+    deactivateFormFields: deactivateFormFields,
+    renderTotalOrder: renderTotalOrder,
+    getAvailabilityStatus: getAvailabilityStatus,
+    clean: cleanOrder
   };
 })();

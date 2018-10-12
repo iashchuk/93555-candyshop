@@ -7,7 +7,7 @@
   var deliverBtnCourier = document.querySelector('#deliver__courier');
   var deliverStore = document.querySelector('.deliver__store');
   var deliverCourier = document.querySelector('.deliver__courier');
-  var deliverPoint = document.querySelectorAll('.deliver__store-item');
+  var deliverPoints = document.querySelectorAll('.deliver__store-item');
   var deliverDescribe = document.querySelector('.deliver__store-describe');
   var deliverStoresFieldset = document.querySelector('.deliver__stores');
   var deliverCourierFieldset = document.querySelector('.deliver__entry-fields-wrap');
@@ -19,33 +19,43 @@
 
   var AddressList = {
     'academicheskaya': 'проспект Науки, д. 19, корп. 3, литер А, ТК «Платформа», 3-й этаж, секция 310',
-    'vasileostrovskaya': 'Адрес №2',
-    'rechka': 'Адрес №3',
-    'petrogradskaya': 'Адрес №4',
-    'proletarskaya': 'Адрес №5',
-    'vostaniya': 'Адрес №6',
-    'prosvesheniya': 'Адрес №7',
-    'frunzenskaya': 'Адрес №8',
-    'chernishevskaya': 'Адрес №9',
-    'tehinstitute': 'Адрес №10'
+    'vasileostrovskaya': 'Адрес #2',
+    'rechka': 'Адрес #3',
+    'petrogradskaya': 'Адрес #4',
+    'proletarskaya': 'Адрес #5',
+    'vostaniya': 'Адрес #6',
+    'prosvesheniya': 'Адрес #7',
+    'frunzenskaya': 'Адрес #8',
+    'chernishevskaya': 'Адрес #9',
+    'tehinstitute': 'Адрес #10'
   };
 
   var getPhotoLink = function (photoName) {
     return photoOptions.PATH + photoName + photoOptions.EXTENSION;
   };
 
-  var selectStore = function () {
+  var getStoreInfo = function (item) {
     var map = document.querySelector('.deliver__store-map-img');
-    deliverPoint.forEach(function (item) {
+    var label = item.querySelector('label');
+    var input = item.querySelector('input');
+    input.checked = true;
+    map.src = getPhotoLink(input.value);
+    map.alt = label.textContent;
+    deliverDescribe.textContent = AddressList[input.value];
+  };
+
+  var selectStore = function () {
+    deliverPoints.forEach(function (item) {
       item.addEventListener('click', function () {
-        var label = item.querySelector('label');
-        var input = item.querySelector('input');
-        input.checked = true;
-        map.src = getPhotoLink(input.value);
-        map.alt = label.textContent;
-        deliverDescribe.textContent = AddressList[input.value];
+        getStoreInfo(item);
       });
     });
+  };
+
+  var resetDeliveryMethod = function () {
+    deliverStore.classList.remove('visually-hidden');
+    deliverCourier.classList.add('visually-hidden');
+    getStoreInfo(deliverPoints[0]);
   };
 
   var setDeliverFieldsetStatus = function () {
@@ -56,8 +66,7 @@
 
   var selectDeliveryHandler = function (evt) {
     if (evt.target === deliverBtnStore) {
-      deliverStore.classList.remove('visually-hidden');
-      deliverCourier.classList.add('visually-hidden');
+      resetDeliveryMethod();
     } else if (evt.target === deliverBtnCourier) {
       deliverStore.classList.add('visually-hidden');
       deliverCourier.classList.remove('visually-hidden');
@@ -72,5 +81,9 @@
   };
 
   initDeliverModule();
+
+  window.delivery = {
+    reset: resetDeliveryMethod
+  };
 
 })();
