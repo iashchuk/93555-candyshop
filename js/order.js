@@ -25,10 +25,10 @@
   var getTotalOrder = function (orderList) {
     var totalPrice = 0;
     var totalAmount = 0;
-    for (var i = 0; i < orderList.length; i++) {
-      totalPrice += orderCards[i].price * orderCards[i].total;
-      totalAmount += orderCards[i].total;
-    }
+    orderList.forEach(function (item) {
+      totalPrice += item.price * item.total;
+      totalAmount += item.total;
+    });
     return {
       price: totalPrice,
       amount: totalAmount
@@ -116,6 +116,7 @@
 
       if (!orderCards.length) {
         deactivateFormFields();
+        window.delivery.deactivateFields();
         goodsTotalHeader.textContent = 'В корзине ничего нет';
       }
     });
@@ -125,6 +126,8 @@
         orderCardCloseHandler(element);
         if (!orderCards.length) {
           deactivateFormFields();
+          window.delivery.deactivateFields();
+          window.payment.deactivate();
         }
       } else {
         element.total--;
@@ -155,7 +158,7 @@
 
   var getAvailabilityStatus = function (element) {
     var status = orderCards.some(function (item) {
-      return (item.name === element.name && item.amount === element.amount);
+      return (item.name === element.name && item.total === element.amount);
     });
     return status;
   };
@@ -167,7 +170,7 @@
     });
   };
 
-  var activeFormFileds = function () {
+  var activateFormFields = function () {
     orderFormFields.forEach(function (item) {
       item.disabled = false;
       orderFormSubmit.disabled = false;
@@ -179,8 +182,8 @@
 
   window.order = {
     addGoodToBasket: addGoodToBasket,
-    activeFormFileds: activeFormFileds,
-    deactivateFormFields: deactivateFormFields,
+    activateFields: activateFormFields,
+    deactivateFields: deactivateFormFields,
     renderTotalOrder: renderTotalOrder,
     getAvailabilityStatus: getAvailabilityStatus,
     clean: cleanOrder

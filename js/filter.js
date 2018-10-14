@@ -35,6 +35,32 @@
     }
   };
 
+  var sortOptions = {
+    0: function (a, b) {
+      return b.rating.number - a.rating.number;
+    },
+    1: function (a, b) {
+      return b.price - a.price;
+    },
+    2: function (a, b) {
+      return a.price - b.price;
+    },
+    3: function (a, b) {
+      return b.rating.value - a.rating.value;
+    }
+  };
+
+  var sortCatalog = function (cardData) {
+    sortCases.forEach(function (item, index) {
+      if (item.checked) {
+        cardData.sort(function (a, b) {
+          return sortOptions[index](a, b);
+        });
+      }
+    });
+    return cardData;
+  };
+
   var catalogLoadHandler = function () {
     catalogLoad.classList.add('visually-hidden');
     catalog.classList.remove('catalog__cards--load');
@@ -46,41 +72,6 @@
       fragment.appendChild(window.catalog.renderCard(item));
     });
     return fragment;
-  };
-
-  var updateCatalog = function (cardData) {
-    catalog.innerHTML = '';
-    catalog.appendChild(renderCardFragment(cardData));
-  };
-
-  var activateEmptyCase = function () {
-    catalog.innerHTML = '';
-    catalog.appendChild(emptyCase);
-  };
-
-  var sortCatalog = function (cardData) {
-    sortCases.forEach(function (item, index) {
-      if (item.checked) {
-        if (index === 0) {
-          cardData.sort(function (a, b) {
-            return b.rating.number - a.rating.number;
-          });
-        } else if (index === 1) {
-          cardData.sort(function (a, b) {
-            return b.price - a.price;
-          });
-        } else if (index === 2) {
-          cardData.sort(function (a, b) {
-            return a.price - b.price;
-          });
-        } else if (index === 3) {
-          cardData.sort(function (a, b) {
-            return b.rating.value - a.rating.value;
-          });
-        }
-      }
-    });
-    return cardData;
   };
 
   var selectProperty = function (element) {
@@ -123,7 +114,6 @@
     productKindsCount[index].textContent = '(' + amount.length + ')';
   };
 
-
   var getAmountByProperty = function (cardData) {
     productPropertiesCount.forEach(function (property, index) {
       var amount = cardData.filter(function (item) {
@@ -133,7 +123,6 @@
     });
   };
 
-
   var getAmountByAvailability = function (cardData) {
     var amount = cardData.filter(function (item) {
       return (item.amount > 0);
@@ -141,17 +130,14 @@
     productAvailabilityCount.textContent = '(' + amount.length + ')';
   };
 
-
   var getAmountByPrice = function (cardData) {
     var amount = cardData.filter(window.price.set);
     productPriceCount.textContent = '(' + amount.length + ')';
   };
 
-
   var getAmountFavorite = function (favoriteGoodsList) {
     productFavoriteCount.textContent = '(' + favoriteGoodsList.length + ')';
   };
-
 
   var getAmountProducts = function (cardData) {
     KIND_PRODUCTS.forEach(function (kind, index) {
@@ -160,6 +146,16 @@
     getAmountByProperty(cardData);
     getAmountByAvailability(cardData);
     getAmountByPrice(cardData);
+  };
+
+  var activateEmptyCase = function () {
+    catalog.innerHTML = '';
+    catalog.appendChild(emptyCase);
+  };
+
+  var updateCatalog = function (cardData) {
+    catalog.innerHTML = '';
+    catalog.appendChild(renderCardFragment(cardData));
   };
 
   var caseChangeHandler = window.debounce(function (cardData) {

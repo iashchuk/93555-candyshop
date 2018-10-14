@@ -2,12 +2,13 @@
 
 (function () {
   var form = document.querySelector('.buy__form');
+  var payment = document.querySelector('.payment');
   var paymentMethod = document.querySelector('.payment__method');
   var paymentBtnCard = document.querySelector('#payment__card');
   var paymentBtnCash = document.querySelector('#payment__cash');
   var paymentCard = document.querySelector('.payment__card-wrap');
   var paymentCash = document.querySelector('.payment__cash-wrap');
-  var paymentFields = paymentCard.querySelectorAll('input');
+  var paymentFields = payment.querySelectorAll('input');
   var paymentBlock = document.querySelector('.payment__inputs');
   var cardNumber = paymentBlock.querySelector('#payment__card-number');
   var cardDate = paymentBlock.querySelector('#payment__card-date');
@@ -16,31 +17,29 @@
   var cardStatus = document.querySelector('.payment__card-status');
 
 
+  var resetPaymentMethod = function () {
+    paymentCash.classList.add('visually-hidden');
+    paymentCard.classList.remove('visually-hidden');
+  };
+
   var setFieldsStatus = function (fields, isDisabled) {
     fields.forEach(function (item) {
       item.disabled = isDisabled;
     });
   };
 
-  var resetPaymentMethod = function () {
-    paymentCash.classList.add('visually-hidden');
-    paymentCard.classList.remove('visually-hidden');
-  };
 
   var selectPaymentHandler = function (evt) {
+    setFieldsStatus(paymentFields, false);
     if (evt.target === paymentBtnCash) {
       paymentCash.classList.remove('visually-hidden');
       paymentCard.classList.add('visually-hidden');
+      setFieldsStatus(paymentFields, true);
     } else if (evt.target === paymentBtnCard) {
       resetPaymentMethod();
     }
-
-    if (paymentBtnCard.checked) {
-      setFieldsStatus(paymentFields, false);
-    } else {
-      setFieldsStatus(paymentFields, true);
-    }
   };
+
 
   var checkCardLuhnAlgorithm = function (number) {
     var digits = number.replace(/\s/g, '').split('').map(Number);
@@ -112,12 +111,16 @@
     }
   };
 
+  var setDefaultCardStatus = function () {
+    cardStatus.textContent = 'Не определён';
+  };
+
   var paymentInformationHandler = function () {
     if (cardNumber.checkValidity() && cardDate.checkValidity() &&
       cardCVC.checkValidity() && cardHolder.checkValidity()) {
       cardStatus.textContent = 'Одобрен';
     } else {
-      cardStatus.textContent = 'Не определён';
+      setDefaultCardStatus();
     }
   };
 
@@ -136,16 +139,18 @@
       evt.preventDefault();
       window.backend.upload(formSuccessHandler, formErrorHandler, new FormData(form));
       resetPaymentMethod();
+      deactivatePayment();
+      setDefaultCardStatus();
       window.delivery.reset();
       window.order.clean();
-      window.order.deactivateFormFields();
+      window.order.deactivateFields();
       window.filter.reset();
       window.price.reset();
       window.catalog.init();
     }
   };
 
-  var initPayment = function () {
+  var activatePayment = function () {
     paymentMethod.addEventListener('click', selectPaymentHandler);
     cardNumber.addEventListener('keypress', cardNumberHandler);
     cardNumber.addEventListener('change', cardValidNumberHandler);
@@ -158,6 +163,24 @@
     form.addEventListener('submit', formSubmitHandler);
   };
 
-  initPayment();
+  var deactivatePayment = function () {
+    paymentMethod.removeEventListener('click', selectPaymentHandler);
+    cardNumber.removeEventListener('keypress', cardNumberHandler);
+    cardNumber.removeEventListener('change', cardValidNumberHandler);
+    cardDate.removeEventListener('keypress', cardDateHandler);
+    cardDate.removeEventListener('change', cardValidDateHandler);
+    cardCVC.removeEventListener('change', cardValidCVCHandler);
+    cardHolder.removeEventListener('input', cardHolderHandler);
+    cardHolder.removeEventListener('change', cardValidHolderHandler);
+    paymentBlock.removeEventListener('change', paymentInformationHandler);
+    form.removeEventListener('submit', formSubmitHandler);
+  };
+
+  setFieldsStatus(paymentFields, true);
+
+  window.payment = {
+    activate: activatePayment,
+    deactivate: deactivatePayment
+  };
 
 })();

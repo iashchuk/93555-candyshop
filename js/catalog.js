@@ -54,7 +54,9 @@
       evt.preventDefault();
       window.order.addGoodToBasket(element);
       window.order.renderTotalOrder();
-      window.order.activeFormFileds();
+      window.order.activateFields();
+      window.delivery.activateFields();
+      window.payment.activate();
     });
 
     cardBtnFavorite.addEventListener('click', function (evt) {
