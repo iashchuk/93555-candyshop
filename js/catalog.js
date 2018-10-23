@@ -65,7 +65,7 @@
       if (cardBtnFavorite.classList.contains('card__btn-favorite--selected') && !element.favorite) {
         element.favorite = true;
         favoriteCards[favoriteCards.length] = element;
-        window.filter.getAmountFavorite(favoriteCards);
+        window.amount.getFavorite(favoriteCards);
       } else {
         element.favorite = false;
         favoriteCards.forEach(function (item, index) {
@@ -73,7 +73,7 @@
             favoriteCards.splice(index, 1);
           }
         });
-        window.filter.getAmountFavorite(favoriteCards);
+        window.amount.getFavorite(favoriteCards);
       }
     });
 
@@ -92,7 +92,7 @@
     var products = loadCards.filter(function (item) {
       return (!window.order.getAvailabilityStatus(item) && item.amount > 0);
     });
-    window.filter.getAmountByAvailability(products);
+    window.amount.getByAvailability(products);
     return products;
   };
 
@@ -100,14 +100,14 @@
   var priceChangeHandler = function () {
     catalogCards = loadCards.filter(window.price.set).slice();
     window.filter.caseChangeHandler(catalogCards);
-    window.filter.getAmountProducts(catalogCards);
+    window.amount.getProducts(catalogCards);
   };
 
 
   var initCatalog = function () {
     catalogCards = loadCards.filter(window.price.set);
-    window.filter.getAmountProducts(catalogCards);
-    window.filter.getAmountFavorite(favoriteCards);
+    window.amount.getProducts(catalogCards);
+    window.amount.getFavorite(favoriteCards);
     window.filter.updateCatalog(catalogCards);
   };
 

@@ -17,11 +17,6 @@
   var kindCases = document.querySelectorAll('.input-btn__input--type');
   var sortCases = document.querySelectorAll('.input-btn__input--sort');
   var emptyCase = document.querySelector('#empty-filters').content.querySelector('div');
-  var productPriceCount = document.querySelector('.range__count');
-  var productFavoriteCount = document.querySelector('.input-btn__item-count--favorite');
-  var productAvailabilityCount = document.querySelector('.input-btn__item-count--availability');
-  var productKindsCount = document.querySelectorAll('.input-btn__item-count--type');
-  var productPropertiesCount = document.querySelectorAll('.input-btn__item-count--property');
 
   var propertyCases = {
     sugar: function (element) {
@@ -107,47 +102,6 @@
     sortCases[0].checked = true;
   });
 
-  var getAmountByKind = function (index, kind, cardData) {
-    var amount = cardData.filter(function (item) {
-      return item.kind === kind;
-    });
-    productKindsCount[index].textContent = '(' + amount.length + ')';
-  };
-
-  var getAmountByProperty = function (cardData) {
-    productPropertiesCount.forEach(function (property, index) {
-      var amount = cardData.filter(function (item) {
-        return propertyCases[property.id](item);
-      });
-      productPropertiesCount[index].textContent = '(' + amount.length + ')';
-    });
-  };
-
-  var getAmountByAvailability = function (cardData) {
-    var amount = cardData.filter(function (item) {
-      return (item.amount > 0);
-    });
-    productAvailabilityCount.textContent = '(' + amount.length + ')';
-  };
-
-  var getAmountByPrice = function (cardData) {
-    var amount = cardData.filter(window.price.set);
-    productPriceCount.textContent = '(' + amount.length + ')';
-  };
-
-  var getAmountFavorite = function (favoriteGoodsList) {
-    productFavoriteCount.textContent = '(' + favoriteGoodsList.length + ')';
-  };
-
-  var getAmountProducts = function (cardData) {
-    KIND_PRODUCTS.forEach(function (kind, index) {
-      getAmountByKind(index, kind, cardData);
-    });
-    getAmountByProperty(cardData);
-    getAmountByAvailability(cardData);
-    getAmountByPrice(cardData);
-  };
-
   var activateEmptyCase = function () {
     catalog.innerHTML = '';
     catalog.appendChild(emptyCase);
@@ -163,14 +117,14 @@
     var filteredCards = cardData.filter(function (item) {
       return (selectProperty(item) && selectKind(item));
     });
-    getAmountByProperty(filteredCards);
+    window.amount.getByProperty(filteredCards);
     return (!filteredCards.length) ? activateEmptyCase() : updateCatalog(filteredCards);
   });
 
   var caseMarkHandler = window.debounce(function (selectFilter, cardData) {
     if (selectFilter.checked) {
       window.price.reset();
-      getAmountProducts(cardData);
+      window.amount.getProducts(cardData);
       caseFilters.forEach(function (item) {
         item.checked = false;
         item.disabled = true;
@@ -194,10 +148,6 @@
   window.filter = {
     reset: resetCases,
     updateCatalog: updateCatalog,
-    getAmountProducts: getAmountProducts,
-    getAmountFavorite: getAmountFavorite,
-    getAmountByProperty: getAmountByProperty,
-    getAmountByAvailability: getAmountByAvailability,
     caseChangeHandler: caseChangeHandler,
     catalogLoadHandler: catalogLoadHandler,
     caseMarkHandler: caseMarkHandler,
