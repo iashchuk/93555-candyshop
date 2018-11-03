@@ -18,18 +18,6 @@
   var sortCases = document.querySelectorAll('.input-btn__input--sort');
   var emptyCase = document.querySelector('#empty-filters').content.querySelector('div');
 
-  var propertyCases = {
-    sugar: function (element) {
-      return (!element.nutritionFacts.sugar);
-    },
-    vegetarian: function (element) {
-      return (element.nutritionFacts.vegetarian);
-    },
-    gluten: function (element) {
-      return (!element.nutritionFacts.gluten);
-    }
-  };
-
   var sortOptions = {
     0: function (a, b) {
       return b.rating.number - a.rating.number;
@@ -42,6 +30,18 @@
     },
     3: function (a, b) {
       return b.rating.value - a.rating.value;
+    }
+  };
+
+  var propertyCases = {
+    sugar: function (element) {
+      return (!element.nutritionFacts.sugar);
+    },
+    vegetarian: function (element) {
+      return (element.nutritionFacts.vegetarian);
+    },
+    gluten: function (element) {
+      return (!element.nutritionFacts.gluten);
     }
   };
 
@@ -146,10 +146,12 @@
   });
 
   window.filter = {
+    KIND_PRODUCTS: KIND_PRODUCTS,
     reset: resetCases,
     updateCatalog: updateCatalog,
     caseChangeHandler: caseChangeHandler,
     catalogLoadHandler: catalogLoadHandler,
     caseMarkHandler: caseMarkHandler,
+    property: propertyCases
   };
 })();
